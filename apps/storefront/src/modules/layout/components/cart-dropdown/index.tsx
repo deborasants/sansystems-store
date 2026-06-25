@@ -17,6 +17,9 @@ import Thumbnail from "@modules/products/components/thumbnail"
 import { usePathname } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
 
+// Ícones
+import { ShoppingCart } from "lucide-react"
+
 const CartDropdown = ({
   cart: cartState,
 }: {
@@ -70,8 +73,9 @@ const CartDropdown = ({
     if (itemRef.current !== totalItems && !pathname.includes("/cart")) {
       timedOpen()
     }
+    itemRef.current = totalItems
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalItems, itemRef.current])
+  }, [totalItems])
 
   return (
     <div
@@ -82,11 +86,20 @@ const CartDropdown = ({
       <Popover className="relative h-full">
         <PopoverButton className="h-full">
           <LocalizedClientLink
-            className="hover:text-ui-fg-base"
             href="/cart"
+            className="p-2 rounded-full hover:bg-zinc-100 transition relative flex items-center justify-center hover:text-ui-fg-base"
             data-testid="nav-cart-link"
-          >{`Cart (${totalItems})`}</LocalizedClientLink>
+          >
+            <ShoppingCart size={20} strokeWidth={1.8} />
+
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-zinc-900 text-white text-[10px] font-medium w-4 h-4 rounded-full flex items-center justify-center leading-none">
+                {totalItems > 9 ? "9+" : totalItems}
+              </span>
+            )}
+          </LocalizedClientLink>
         </PopoverButton>
+
         <Transition
           show={cartDropdownOpen}
           as={Fragment}
@@ -102,9 +115,11 @@ const CartDropdown = ({
             className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base"
             data-testid="nav-cart-dropdown"
           >
+            {/* O resto do dropdown permanece exatamente como era no seu código original */}
             <div className="p-4 flex items-center justify-center">
               <h3 className="text-large-semi">Cart</h3>
             </div>
+
             {cartState && cartState.items?.length ? (
               <>
                 <div className="overflow-y-scroll max-h-[402px] px-4 grid grid-cols-1 gap-y-8 no-scrollbar p-px">
