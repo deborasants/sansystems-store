@@ -35,10 +35,6 @@ export default async function Nav() {
           </div>
           {/* Direita - Ícones e Botão */}
           <div className="flex items-center gap-4">
-            {/* Search */}
-            <button className="p-2 rounded-full hover:bg-zinc-100 transition">
-              <Search size={20} strokeWidth={1.8} />
-            </button>
 
             {/* User */}
             <LocalizedClientLink
