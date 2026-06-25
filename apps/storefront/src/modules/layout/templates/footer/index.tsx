@@ -9,7 +9,7 @@ export default async function Footer() {
   const { collections } = await listCollections({
     fields: "*products",
   });
-  const productCategories = await listCategories();
+  const productCategories = await listCategories({limit: 15});
 
   return (
     <footer className="border-t border-ui-border-base w-full">
