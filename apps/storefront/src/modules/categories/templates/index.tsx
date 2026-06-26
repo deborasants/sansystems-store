@@ -37,60 +37,86 @@ export default function CategoryTemplate({
   getParents(category)
 
   return (
-    <div
-      className="flex flex-col small:flex-row small:items-start py-6 content-container"
-      data-testid="category-container"
-    >
-      <RefinementList sortBy={sort} data-testid="sort-by-container" />
-      <div className="w-full">
-        <div className="flex flex-row mb-8 text-2xl-semi gap-4">
-          {parents &&
-            parents.map((parent) => (
-              <span key={parent.id} className="text-ui-fg-subtle">
-                <LocalizedClientLink
-                  className="mr-4 hover:text-black"
-                  href={`/categories/${parent.handle}`}
-                  data-testid="sort-by-link"
-                >
-                  {parent.name}
-                </LocalizedClientLink>
-                /
-              </span>
-            ))}
-          <h1 data-testid="category-page-title">{category.name}</h1>
-        </div>
-        {category.description && (
-          <div className="mb-8 text-base-regular">
-            <p>{category.description}</p>
+    <div className="bg-white py-8 small:py-12">
+      <div className="content-container">
+        {/* Header da Categoria */}
+        <div className="mb-12">
+          <div className="inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-4 py-1.5 text-xs font-medium text-orange-700 mb-6">
+            E-COMMERCE DE SOFTWARES
           </div>
-        )}
-        {category.category_children && (
-          <div className="mb-8 text-base-large">
-            <ul className="grid grid-cols-1 gap-2">
-              {category.category_children?.map((c) => (
-                <li key={c.id}>
-                  <InteractiveLink href={`/categories/${c.handle}`}>
-                    {c.name}
-                  </InteractiveLink>
-                </li>
+
+          {/* Breadcrumb */}
+          {parents.length > 0 && (
+            <div className="flex items-center text-sm text-gray-500 mb-4">
+              {parents.map((parent, index) => (
+                <span key={parent.id}>
+                  <LocalizedClientLink
+                    href={`/categories/${parent.handle}`}
+                    className="hover:text-orange-600 transition-colors"
+                  >
+                    {parent.name}
+                  </LocalizedClientLink>
+                  <span className="mx-2">/</span>
+                </span>
               ))}
-            </ul>
+            </div>
+          )}
+
+          <h1 className="text-4xl small:text-5xl font-bold text-gray-900 mb-4">
+            {category.name}
+          </h1>
+
+          {category.description && (
+            <p className="text-gray-600 text-lg max-w-3xl">
+              {category.description}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-col small:flex-row small:items-start gap-8 small:gap-10">
+          {/* Filtros Laterais */}
+          <div className="small:w-64 flex-shrink-0">
+            <RefinementList sortBy={sort} data-testid="sort-by-container" />
           </div>
-        )}
-        <Suspense
-          fallback={
-            <SkeletonProductGrid
-              numberOfProducts={category.products?.length ?? 8}
-            />
-          }
-        >
-          <PaginatedProducts
-            sortBy={sort}
-            page={pageNumber}
-            categoryId={category.id}
-            countryCode={countryCode}
-          />
-        </Suspense>
+
+          {/* Área de Produtos */}
+          <div className="flex-1">
+            {category.category_children && category.category_children.length > 0 && (
+              <div className="mb-10">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-4">
+                  Subcategorias
+                </h3>
+                <ul className="flex flex-wrap gap-2">
+                  {category.category_children.map((c) => (
+                    <li key={c.id}>
+                      <InteractiveLink
+                        href={`/categories/${c.handle}`}
+                        className="inline-block bg-gray-100 hover:bg-orange-50 hover:text-orange-700 transition-colors px-5 py-2.5 rounded-2xl text-sm font-medium"
+                      >
+                        {c.name}
+                      </InteractiveLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <Suspense
+              fallback={
+                <SkeletonProductGrid
+                  numberOfProducts={category.products?.length ?? 8}
+                />
+              }
+            >
+              <PaginatedProducts
+                sortBy={sort}
+                page={pageNumber}
+                categoryId={category.id}
+                countryCode={countryCode}
+              />
+            </Suspense>
+          </div>
+        </div>
       </div>
     </div>
   )
