@@ -31,36 +31,51 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
 
   return (
     <>
-      <div
-        className="content-container  flex flex-col small:flex-row small:items-start py-6 relative"
-        data-testid="product-container"
-      >
-        <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-6">
-          <ProductInfo product={product} />
-          <ProductTabs product={product} />
-        </div>
-        <div className="block w-full relative">
-          <ImageGallery images={images} />
-        </div>
-        <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-12">
-          <ProductOnboardingCta />
-          <Suspense
-            fallback={
-              <ProductActions
-                disabled={true}
-                product={product}
-                region={region}
-              />
-            }
-          >
-            <ProductActionsWrapper id={product.id} region={region} />
-          </Suspense>
+      <div className="bg-white py-8 small:py-12">
+        <div
+          className="content-container flex flex-col small:flex-row small:items-start gap-8 small:gap-12 relative"
+          data-testid="product-container"
+        >
+          {/* Coluna Esquerda - Info */}
+          <div className="small:sticky small:top-24 small:max-w-[300px] w-full flex-shrink-0 py-4">
+            <ProductInfo product={product} />
+            <div className="mt-8">
+              <ProductTabs product={product} />
+            </div>
+          </div>
+
+          {/* Galeria de Imagens - Centro */}
+          <div className="flex-1 w-full min-w-0">
+            <div className="bg-gray-50 rounded-3xl overflow-hidden border border-gray-100">
+              <ImageGallery images={images} />
+            </div>
+          </div>
+
+          {/* Coluna Direita - Ações de Compra */}
+          <div className="small:sticky small:top-24 small:max-w-[320px] w-full flex-shrink-0 py-4">
+            <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
+              <ProductOnboardingCta />
+              
+              <div className="mt-8">
+                <Suspense
+                  fallback={
+                    <ProductActions
+                      disabled={true}
+                      product={product}
+                      region={region}
+                    />
+                  }
+                >
+                  <ProductActionsWrapper id={product.id} region={region} />
+                </Suspense>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div
-        className="content-container my-16 small:my-32"
-        data-testid="related-products-container"
-      >
+
+      {/* Produtos Relacionados */}
+      <div className="content-container my-16 small:my-24">
         <Suspense fallback={<SkeletonRelatedProducts />}>
           <RelatedProducts product={product} countryCode={countryCode} />
         </Suspense>

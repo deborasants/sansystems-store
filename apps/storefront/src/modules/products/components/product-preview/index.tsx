@@ -6,85 +6,88 @@ import Thumbnail from "../thumbnail"
 import PreviewPrice from "./price"
 
 export default async function ProductPreview({
-  product,
-  isFeatured,
-  region: _region,
+    product,
+    isFeatured,
+    region: _region,
 }: {
-  product: HttpTypes.StoreProduct
-  isFeatured?: boolean
-  region: HttpTypes.StoreRegion
+    product: HttpTypes.StoreProduct
+    isFeatured?: boolean
+    region: HttpTypes.StoreRegion
 }) {
-  // 🔒 proteção contra produto inválido (EVITA seu erro)
-  if (!product?.id) return null
+    if (!product?.id) return null
 
-  const { cheapestPrice } = getProductPrice({ product })
+    const { cheapestPrice } = getProductPrice({ product })
 
-  return (
-    <LocalizedClientLink href={`/products/${product.handle}`} className="group block">
-      <div
-        data-testid="product-wrapper"
-        className="
-          rounded-2xl overflow-hidden
+    return (
+        <LocalizedClientLink
+            href={`/products/${product.handle}`}
+            className="group block h-full"
+        >
+            <div
+                data-testid="product-wrapper"
+                className="
+          h-full
+          rounded-2xl
+          overflow-hidden
           border border-gray-100
           bg-white
           shadow-sm
           hover:shadow-xl
-          transition-all duration-300
+          transition-all
+          duration-300
           group-hover:-translate-y-1
+          flex
+          flex-col
         "
-      >
-        {/* THUMBNAIL */}
-        <div className="relative">
-          <Thumbnail
-            thumbnail={product.thumbnail}
-            images={product.images}
-            size="full"
-            isFeatured={isFeatured}
-          />
-        </div>
+            >
+                {/* IMAGEM */}
+                <div className="relative">
+                    <Thumbnail
+                        thumbnail={product.thumbnail}
+                        images={product.images}
+                        size="full"
+                        isFeatured={isFeatured}
+                    />
+                </div>
 
-        {/* INFO */}
-        <div className="p-4 flex items-start justify-between gap-4">
-          
-          {/* TITLE */}
-          <div className="flex-1">
-            <Text
-              className="
+                {/* INFORMAÇÕES */}
+                <div className="p-4 flex-1 flex justify-between gap-4 min-h-[110px]">
+                    <div className="flex flex-col flex-1 overflow-hidden">
+                        <Text
+                            className="
                 text-ui-fg-base
                 font-medium
                 leading-snug
                 group-hover:text-orange-600
                 transition-colors
+                line-clamp-2
+                min-h-[48px]
               "
-              data-testid="product-title"
-            >
-              {product.title}
-            </Text>
+                            data-testid="product-title"
+                        >
+                            {product.title}
+                        </Text>
 
-            {/* opcional: subtitle / metadata futura */}
-            {product.subtitle && (
-              <p className="text-sm text-ui-fg-subtle mt-1 line-clamp-2">
-                {product.subtitle}
-              </p>
-            )}
-          </div>
+                        {product.subtitle && (
+                            <p className="text-sm text-ui-fg-subtle mt-1 line-clamp-2 min-h-[40px]">
+                                {product.subtitle}
+                            </p>
+                        )}
+                    </div>
 
-          {/* PRICE */}
-          <div className="flex items-center justify-end min-w-[90px]">
-            {cheapestPrice ? (
-              <div className="flex flex-col items-end">
-                <div className="text-orange-600 font-bold text-base">
-                  <PreviewPrice price={cheapestPrice} />
+                    <div className="flex flex-col justify-end items-end min-w-[110px]">
+                        {cheapestPrice ? (
+                            <div className="text-orange-600 font-bold text-base whitespace-nowrap">
+                                <PreviewPrice price={cheapestPrice} />
+                            </div>
+                        ) : (
+                            <span className="text-sm text-gray-400">
+                                Indisponível
+                            </span>
+                        )}
+                    </div>
                 </div>
-              </div>
-            ) : (
-              <span className="text-sm text-gray-400">
-                Indisponível
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    </LocalizedClientLink>
-  )
+            </div>
+        </LocalizedClientLink>
+    )
 }

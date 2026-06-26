@@ -53,14 +53,16 @@ const Hero = () => {
                 </Button>
               </Link>
 
-              <Button
-                variant="secondary"
-                size="xl"
-                className="px-8 py-4 text-lg font-medium rounded-full border-2 hover:bg-zinc-50"
-                onClick={scrollToHowItWorks}
-              >
-                Destaques
-              </Button>
+              <Link href="/store">
+                <Button
+                  variant="secondary"
+                  size="xl"
+                  className="px-8 py-4 text-lg font-medium rounded-full border-2 hover:bg-zinc-50"
+                  onClick={scrollToHowItWorks}
+                >
+                  Destaques
+                </Button>
+              </Link>
             </div>
 
             {/* Trust signals */}
