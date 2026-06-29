@@ -6,23 +6,26 @@ import { StoreRegion } from "@medusajs/types";
 import LocalizedClientLink from "@modules/common/components/localized-client-link";
 import CartButton from "@modules/layout/components/cart-button";
 import SideMenu from "@modules/layout/components/side-menu";
-import logo from "next/image";
-import { Search, User, ShoppingBag } from "lucide-react";
+import { retrieveCustomer } from "@lib/data/customer";
+import { User, ShoppingBag, LogOut } from "lucide-react";
 
 export default async function Nav() {
-  const [regions, locales, currentLocale] = await Promise.all([
+  const [regions, locales, currentLocale, customer] = await Promise.all([
     listRegions(),
     listLocales(),
     getLocale(),
+    retrieveCustomer(),
   ]);
+
+  const isLoggedIn = !!customer;
 
   return (
     <div className="sticky top-0 inset-x-0 z-50 bg-white border-b border-ui-border-base">
       <header className="max-w-7xl mx-auto px-6 py-4">
         <nav className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded flex items-center justify-center text-white font-bold text-2xl">
+          {/* Logo + Nome - Ambos levam para Home */}
+          <LocalizedClientLink href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <div className="w-9 h-9 rounded flex items-center justify-center text-white font-bold text-2xl overflow-hidden">
               <img
                 src="/sansystems-logo.png"
                 alt="Sansystems"
@@ -32,10 +35,10 @@ export default async function Nav() {
             <span className="font-semibold text-2xl tracking-tight text-black">
               Sansystems
             </span>
-          </div>
+          </LocalizedClientLink>
+
           {/* Direita - Ícones e Botão */}
           <div className="flex items-center gap-4">
-
             {/* User */}
             <LocalizedClientLink
               href="/account"
@@ -55,13 +58,31 @@ export default async function Nav() {
               <CartButton />
             </Suspense>
 
-            {/* Entrar / Cadastrar (mantido igual) */}
-            <LocalizedClientLink
-              href="/account"
-              className="bg-black hover:bg-zinc-900 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-colors hidden md:block"
-            >
-              Entrar / Cadastrar
-            </LocalizedClientLink>
+            {/* Botão de Login / Logout */}
+            {isLoggedIn ? (
+              <form 
+                action={async () => {
+                  "use server";
+                  const { signout } = await import("@lib/data/customer");
+                  await signout();
+                }}
+              >
+                <button
+                  type="submit"
+                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-colors hidden md:flex items-center gap-2"
+                >
+                  <LogOut size={17} />
+                  Sair
+                </button>
+              </form>
+            ) : (
+              <LocalizedClientLink
+                href="/account"
+                className="bg-black hover:bg-zinc-900 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-colors hidden md:block"
+              >
+                Entrar / Cadastrar
+              </LocalizedClientLink>
+            )}
 
             {/* Mobile Menu */}
             <div className="md:hidden">

@@ -26,6 +26,7 @@ const AccountNav = ({
 
   return (
     <div>
+      {/* Versão Mobile */}
       <div className="small:hidden" data-testid="mobile-account-nav">
         {route !== `/${countryCode}/account` ? (
           <LocalizedClientLink
@@ -35,26 +36,26 @@ const AccountNav = ({
           >
             <>
               <ChevronDown className="transform rotate-90" />
-              <span>Account</span>
+              <span>Minha Conta</span>
             </>
           </LocalizedClientLink>
         ) : (
           <>
-            <div className="text-xl-semi mb-4 px-8">
-              Hello {customer?.first_name}
+            <div className="text-xl-semi mb-6 px-6">
+              Olá, {customer?.first_name || "Cliente"}
             </div>
             <div className="text-base-regular">
               <ul>
                 <li>
                   <LocalizedClientLink
                     href="/account/profile"
-                    className="flex items-center justify-between py-4 border-b border-gray-200 px-8"
+                    className="flex items-center justify-between py-4 border-b border-gray-200 px-6"
                     data-testid="profile-link"
                   >
                     <>
-                      <div className="flex items-center gap-x-2">
+                      <div className="flex items-center gap-x-3">
                         <User size={20} />
-                        <span>Profile</span>
+                        <span>Perfil</span>
                       </div>
                       <ChevronDown className="transform -rotate-90" />
                     </>
@@ -63,13 +64,13 @@ const AccountNav = ({
                 <li>
                   <LocalizedClientLink
                     href="/account/addresses"
-                    className="flex items-center justify-between py-4 border-b border-gray-200 px-8"
+                    className="flex items-center justify-between py-4 border-b border-gray-200 px-6"
                     data-testid="addresses-link"
                   >
                     <>
-                      <div className="flex items-center gap-x-2">
+                      <div className="flex items-center gap-x-3">
                         <MapPin size={20} />
-                        <span>Addresses</span>
+                        <span>Endereços</span>
                       </div>
                       <ChevronDown className="transform -rotate-90" />
                     </>
@@ -78,12 +79,12 @@ const AccountNav = ({
                 <li>
                   <LocalizedClientLink
                     href="/account/orders"
-                    className="flex items-center justify-between py-4 border-b border-gray-200 px-8"
+                    className="flex items-center justify-between py-4 border-b border-gray-200 px-6"
                     data-testid="orders-link"
                   >
-                    <div className="flex items-center gap-x-2">
+                    <div className="flex items-center gap-x-3">
                       <Package size={20} />
-                      <span>Orders</span>
+                      <span>Meus Pedidos</span>
                     </div>
                     <ChevronDown className="transform -rotate-90" />
                   </LocalizedClientLink>
@@ -91,13 +92,13 @@ const AccountNav = ({
                 <li>
                   <button
                     type="button"
-                    className="flex items-center justify-between py-4 border-b border-gray-200 px-8 w-full"
+                    className="flex items-center justify-between py-4 border-b border-gray-200 px-6 w-full text-red-600 hover:text-red-700"
                     onClick={handleLogout}
                     data-testid="logout-button"
                   >
-                    <div className="flex items-center gap-x-2">
+                    <div className="flex items-center gap-x-3">
                       <ArrowRightOnRectangle />
-                      <span>Log out</span>
+                      <span>Sair da conta</span>
                     </div>
                     <ChevronDown className="transform -rotate-90" />
                   </button>
@@ -107,20 +108,26 @@ const AccountNav = ({
           </>
         )}
       </div>
+
+      {/* Versão Desktop */}
       <div className="hidden small:block" data-testid="account-nav">
         <div>
-          <div className="pb-4">
-            <h3 className="text-base-semi">Account</h3>
+          <div className="pb-6">
+            <h3 className="text-lg font-semibold text-zinc-900">Minha Conta</h3>
+            <p className="text-sm text-zinc-500 mt-1">
+              Olá, {customer?.first_name || "Cliente"}
+            </p>
           </div>
+
           <div className="text-base-regular">
-            <ul className="flex mb-0 justify-start items-start flex-col gap-y-4">
+            <ul className="flex flex-col gap-y-4">
               <li>
                 <AccountNavLink
                   href="/account"
                   route={route!}
                   data-testid="overview-link"
                 >
-                  Overview
+                  Visão Geral
                 </AccountNavLink>
               </li>
               <li>
@@ -129,7 +136,7 @@ const AccountNav = ({
                   route={route!}
                   data-testid="profile-link"
                 >
-                  Profile
+                  Perfil
                 </AccountNavLink>
               </li>
               <li>
@@ -138,7 +145,7 @@ const AccountNav = ({
                   route={route!}
                   data-testid="addresses-link"
                 >
-                  Addresses
+                  Endereços
                 </AccountNavLink>
               </li>
               <li>
@@ -147,16 +154,17 @@ const AccountNav = ({
                   route={route!}
                   data-testid="orders-link"
                 >
-                  Orders
+                  Meus Pedidos
                 </AccountNavLink>
               </li>
-              <li className="text-grey-700">
+              <li>
                 <button
                   type="button"
                   onClick={handleLogout}
+                  className="text-red-600 hover:text-red-700 font-medium transition-colors"
                   data-testid="logout-button"
                 >
-                  Log out
+                  Sair da conta
                 </button>
               </li>
             </ul>
@@ -183,12 +191,16 @@ const AccountNavLink = ({
   const { countryCode }: { countryCode: string } = useParams()
 
   const active = route.split(countryCode)[1] === href
+
   return (
     <LocalizedClientLink
       href={href}
-      className={clx("text-ui-fg-subtle hover:text-ui-fg-base", {
-        "text-ui-fg-base font-semibold": active,
-      })}
+      className={clx(
+        "text-zinc-600 hover:text-black transition-colors",
+        {
+          "text-black font-semibold": active,
+        }
+      )}
       data-testid={dataTestId}
     >
       {children}

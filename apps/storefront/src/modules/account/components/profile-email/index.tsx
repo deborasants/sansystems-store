@@ -3,10 +3,8 @@
 import React, { useEffect, useActionState } from "react";
 
 import Input from "@modules/common/components/input"
-
 import AccountInfo from "../account-info"
 import { HttpTypes } from "@medusajs/types"
-// import { updateCustomer } from "@lib/data/customer"
 
 type MyInformationProps = {
   customer: HttpTypes.StoreCustomer
@@ -15,17 +13,9 @@ type MyInformationProps = {
 const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
   const [successState, setSuccessState] = React.useState(false)
 
-  // TODO: It seems we don't support updating emails now?
-  const updateCustomerEmail = (
-    _currentState: Record<string, unknown>,
-    _formData: FormData
-  ) => {
-    try {
-      // email: formData.get("email") as string
-      return { success: true, error: null }
-    } catch (error) {
-      return { success: false, error: String(error) }
-    }
+  // TODO: Atualização de email ainda não suportada pela Medusa
+  const updateCustomerEmail = () => {
+    return { success: false, error: "A alteração de email ainda não está disponível." }
   }
 
   const [state, formAction] = useActionState(updateCustomerEmail, {
@@ -33,9 +23,7 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
     success: false,
   })
 
-  const clearState = () => {
-    setSuccessState(false)
-  }
+  const clearState = () => setSuccessState(false)
 
   useEffect(() => {
     setSuccessState(state.success)
@@ -45,24 +33,23 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
     <form action={formAction} className="w-full">
       <AccountInfo
         label="Email"
-        currentInfo={`${customer.email}`}
+        currentInfo={customer.email}
         isSuccess={successState}
         isError={!!state.error}
         errorMessage={state.error || undefined}
         clearState={clearState}
         data-testid="account-email-editor"
       >
-        <div className="grid grid-cols-1 gap-y-2">
-          <Input
-            label="Email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            defaultValue={customer.email}
-            data-testid="email-input"
-          />
-        </div>
+        <Input
+          label="Email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          defaultValue={customer.email}
+          disabled
+          data-testid="email-input"
+        />
       </AccountInfo>
     </form>
   )

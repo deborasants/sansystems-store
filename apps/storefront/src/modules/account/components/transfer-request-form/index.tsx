@@ -1,9 +1,9 @@
 "use client"
+
 import { createTransferRequest } from "@lib/data/orders"
 import { CheckCircleMiniSolid, XCircleSolid } from "@medusajs/icons"
 import { Heading, IconButton, Input, Text } from "@modules/common/components/ui"
 import { useActionState } from "react"
-// TODO: Re-add Toaster component when needed
 import { SubmitButton } from "@modules/checkout/components/submit-button"
 import { useEffect, useState } from "react"
 
@@ -23,56 +23,63 @@ export default function TransferRequestForm() {
   }, [state.success, state.order])
 
   return (
-    <div className="flex flex-col gap-y-4 w-full">
-      <div className="grid sm:grid-cols-2 items-center gap-x-8 gap-y-4 w-full">
-        <div className="flex flex-col gap-y-1">
-          <Heading level="h3" className="!text-sm font-semibold text-neutral-950">
-            Order transfers
+    <div className="w-full bg-white border border-zinc-200 rounded-2xl p-8">
+      <div className="grid md:grid-cols-2 gap-8 items-start">
+        {/* Texto Explicativo */}
+        <div className="flex flex-col gap-y-2">
+          <Heading level="h3" className="text-lg font-semibold text-zinc-900">
+            Transferência de Pedido
           </Heading>
-          <p className="text-small-regular text-neutral-500">
-            Can&apos;t find the order you are looking for?
-            <br /> Connect an order to your account.
-          </p>
+          <Text className="text-zinc-600">
+            Não encontrou o pedido que está procurando?<br />
+            Conecte um pedido à sua conta.
+          </Text>
         </div>
-        <form
-          action={formAction}
-          className="flex flex-col gap-y-1 sm:items-end"
-        >
-          <div className="flex flex-col gap-y-2 w-full">
-            <Input className="w-full" name="order_id" placeholder="Order ID" />
-            <SubmitButton
-              variant="secondary"
-              size="small"
-              className="w-fit whitespace-nowrap self-end"
-            >
-              Request transfer
-            </SubmitButton>
-          </div>
+
+        {/* Formulário */}
+        <form action={formAction} className="flex flex-col gap-y-3">
+          <Input
+            name="order_id"
+            placeholder="ID do Pedido (ex: #12345)"
+            className="w-full"
+          />
+          
+          <SubmitButton
+            variant="secondary"
+            className="w-full md:w-fit whitespace-nowrap"
+          >
+            Solicitar Transferência
+          </SubmitButton>
         </form>
       </div>
+
+      {/* Mensagem de Erro */}
       {!state.success && state.error && (
-        <Text className="text-base-regular text-rose-500 text-right">
+        <Text className="text-rose-600 text-sm mt-4">
           {state.error}
         </Text>
       )}
+
+      {/* Mensagem de Sucesso */}
       {showSuccess && (
-        <div className="flex justify-between p-4 bg-neutral-50 shadow-borders-base w-full self-stretch items-center">
-          <div className="flex gap-x-2 items-center">
-            <CheckCircleMiniSolid className="w-4 h-4 text-emerald-500" />
-            <div className="flex flex-col gap-y-1">
-              <Text className="text-medim-pl text-neutral-950">
-                Transfer for order {state.order?.id} requested
+        <div className="mt-6 flex justify-between items-center p-5 bg-emerald-50 border border-emerald-200 rounded-xl">
+          <div className="flex gap-x-3 items-start">
+            <CheckCircleMiniSolid className="w-5 h-5 text-emerald-600 mt-0.5" />
+            <div>
+              <Text className="font-medium text-emerald-900">
+                Transferência solicitada para o pedido {state.order?.id}
               </Text>
-              <Text className="text-base-regular text-neutral-600">
-                Transfer request email sent to {state.order?.email}
+              <Text className="text-sm text-emerald-700">
+                Um email foi enviado para {state.order?.email}
               </Text>
             </div>
           </div>
+
           <IconButton
-            className="h-fit"
             onClick={() => setShowSuccess(false)}
+            className="text-zinc-400 hover:text-zinc-600"
           >
-            <XCircleSolid className="w-4 h-4 text-neutral-500" />
+            <XCircleSolid className="w-5 h-5" />
           </IconButton>
         </div>
       )}
