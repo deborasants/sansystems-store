@@ -13,35 +13,30 @@ const CartTemplate = ({
   customer: HttpTypes.StoreCustomer | null
 }) => {
   return (
-    <div className="py-12">
+    <div className="py-12 bg-white">
       <div className="content-container" data-testid="cart-container">
         {cart?.items?.length ? (
-          <div className="grid grid-cols-1 small:grid-cols-[1fr_360px] gap-x-40">
-            <div className="flex flex-col bg-white py-6 gap-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            {/* Lista de Itens */}
+            <div className="lg:col-span-7">
               {!customer && (
                 <>
                   <SignInPrompt />
-                  <Divider />
+                  <Divider className="my-12" />
                 </>
               )}
               <ItemsTemplate cart={cart} />
             </div>
-            <div className="relative">
-              <div className="flex flex-col gap-y-8 sticky top-12">
-                {cart && cart.region && (
-                  <>
-                    <div className="bg-white py-6">
-                      <Summary cart={cart} />
-                    </div>
-                  </>
-                )}
+
+            {/* Resumo do Pedido */}
+            <div className="lg:col-span-5">
+              <div className="sticky top-8">
+                {cart && cart.region && <Summary cart={cart} />}
               </div>
             </div>
           </div>
         ) : (
-          <div>
-            <EmptyCartMessage />
-          </div>
+          <EmptyCartMessage />
         )}
       </div>
     </div>

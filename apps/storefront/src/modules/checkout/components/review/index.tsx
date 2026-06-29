@@ -1,18 +1,18 @@
 "use client"
 
-import { Heading, Text, clx } from "@modules/common/components/ui"
-
-import PaymentButton from "../payment-button"
+import { CheckCircleSolid } from "@medusajs/icons"
+import { clx } from "@modules/common/components/ui"
 import { useSearchParams } from "next/navigation"
 import { HttpTypes } from "@medusajs/types"
 
+import PaymentButton from "../payment-button"
+
 const Review = ({ cart }: { cart: HttpTypes.StoreCart }) => {
   const searchParams = useSearchParams()
-
   const isOpen = searchParams.get("step") === "review"
 
   const paidByGiftcard = !!(
-    (cart as unknown as Record<string, unknown>)?.gift_cards && ((cart as unknown as Record<string, unknown>)?.gift_cards as unknown[])?.length > 0 && cart?.total === 0
+    (cart as any)?.gift_cards?.length > 0 && cart?.total === 0
   )
 
   const previousStepsCompleted =
@@ -21,34 +21,32 @@ const Review = ({ cart }: { cart: HttpTypes.StoreCart }) => {
     (cart.payment_collection || paidByGiftcard)
 
   return (
-    <div className="bg-white">
-      <div className="flex flex-row items-center justify-between mb-6">
-        <Heading
-          level="h2"
-          className={clx(
-            "flex flex-row text-3xl-regular gap-x-2 items-baseline",
-            {
-              "opacity-50 pointer-events-none select-none": !isOpen,
-            }
+    <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <h2 className="text-3xl font-bold text-gray-900">Revisão do Pedido</h2>
+          {!isOpen && previousStepsCompleted && (
+            <CheckCircleSolid className="text-green-500 w-7 h-7" />
           )}
-        >
-          Review
-        </Heading>
+        </div>
       </div>
-      {isOpen && previousStepsCompleted && (
-        <>
-          <div className="flex items-start gap-x-1 w-full mb-6">
-            <div className="w-full">
-              <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                By clicking the Place Order button, you confirm that you have
-                read, understand and accept our Terms of Use, Terms of Sale and
-                Returns Policy and acknowledge that you have read Medusa
-                Store&apos;s Privacy Policy.
-              </Text>
-            </div>
+
+      {isOpen && previousStepsCompleted ? (
+        <div className="space-y-8">
+          <div className="bg-amber-50 border border-amber-100 rounded-2xl p-6 text-sm text-amber-800 leading-relaxed">
+            Ao clicar em <strong>Finalizar Compra</strong>, você confirma que leu, entendeu e aceita nossos 
+            <span className="underline mx-1">Termos de Uso</span>, 
+            <span className="underline mx-1">Termos de Venda</span> e 
+            <span className="underline mx-1">Política de Devolução</span>, 
+            e que leu nossa <span className="underline mx-1">Política de Privacidade</span>.
           </div>
+
           <PaymentButton cart={cart} data-testid="submit-order-button" />
-        </>
+        </div>
+      ) : (
+        <div className="text-gray-500 text-center py-8">
+          Complete as etapas anteriores para revisar seu pedido.
+        </div>
       )}
     </div>
   )
