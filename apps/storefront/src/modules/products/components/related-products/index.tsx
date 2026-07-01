@@ -14,51 +14,36 @@ export default async function RelatedProducts({
 }: RelatedProductsProps) {
   const region = await getRegion(countryCode)
 
-  if (!region) {
-    return null
+  if (!region) return null
+
+  const queryParams: HttpTypes.StoreProductListParams = {
+    region_id: region.id,
+    collection_id: product.collection_id ? [product.collection_id] : undefined,
+    tag_id: product.tags?.map((t) => t.id).filter(Boolean) as string[],
+    is_giftcard: false,
   }
 
-  // edit this function to define your related products logic
-  const queryParams: HttpTypes.StoreProductListParams = {}
-  if (region?.id) {
-    queryParams.region_id = region.id
-  }
-  if (product.collection_id) {
-    queryParams.collection_id = [product.collection_id]
-  }
-  if (product.tags) {
-    queryParams.tag_id = product.tags
-      .map((t) => t.id)
-      .filter(Boolean) as string[]
-  }
-  queryParams.is_giftcard = false
+  const { response } = await listProducts({ queryParams, countryCode })
 
-  const products = await listProducts({
-    queryParams,
-    countryCode,
-  }).then(({ response }) => {
-    return response.products.filter(
-      (responseProduct) => responseProduct.id !== product.id
-    )
-  })
+  const relatedProducts = response.products.filter(
+    (p) => p.id !== product.id
+  )
 
-  if (!products.length) {
-    return null
-  }
+  if (!relatedProducts.length) return null
 
   return (
-    <div className="product-page-constraint">
-      <div className="flex flex-col items-center text-center mb-16">
-        <span className="text-base-regular text-gray-600 mb-6">
-          Related products
+    <div className="product-page-constraint py-16">
+      <div className="flex flex-col items-center text-center mb-12">
+        <span className="text-sm uppercase tracking-widest text-orange-600 font-medium">
+          Você também pode gostar
         </span>
-        <p className="text-2xl-regular text-ui-fg-base max-w-lg">
-          You might also want to check out these products.
+        <p className="text-3xl font-semibold text-zinc-900 mt-3">
+          Produtos relacionados
         </p>
       </div>
 
-      <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8">
-        {products.map((product) => (
+      <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+        {relatedProducts.map((product) => (
           <li key={product.id}>
             <Product region={region} product={product} />
           </li>
