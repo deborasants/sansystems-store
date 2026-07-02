@@ -11,6 +11,7 @@ import ErrorMessage from "@modules/checkout/components/error-message"
 import PaymentContainer, { StripeCardContainer } from "@modules/checkout/components/payment-container"
 import Divider from "@modules/common/components/divider"
 import { Button, Heading } from "@modules/common/components/ui"
+import { RadioGroup } from "@headlessui/react"   // ← Adicionado
 
 const Payment = ({
   cart,
@@ -112,28 +113,33 @@ const Payment = ({
       {isOpen ? (
         <div className="space-y-8">
           {!paidByGiftcard && availablePaymentMethods?.length > 0 && (
-            <div className="space-y-4">
-              {availablePaymentMethods.map((method) => (
-                <div key={method.id}>
-                  {isStripeLike(method.id) ? (
-                    <StripeCardContainer
-                      paymentProviderId={method.id}
-                      selectedPaymentOptionId={selectedPaymentMethod}
-                      paymentInfoMap={paymentInfoMap}
-                      setCardBrand={setCardBrand}
-                      setError={setError}
-                      setCardComplete={setCardComplete}
-                    />
-                  ) : (
-                    <PaymentContainer
-                      paymentInfoMap={paymentInfoMap}
-                      paymentProviderId={method.id}
-                      selectedPaymentOptionId={selectedPaymentMethod}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+            <RadioGroup 
+              value={selectedPaymentMethod} 
+              onChange={setPaymentMethod}
+            >
+              <div className="space-y-4">
+                {availablePaymentMethods.map((method) => (
+                  <div key={method.id}>
+                    {isStripeLike(method.id) ? (
+                      <StripeCardContainer
+                        paymentProviderId={method.id}
+                        selectedPaymentOptionId={selectedPaymentMethod}
+                        paymentInfoMap={paymentInfoMap}
+                        setCardBrand={setCardBrand}
+                        setError={setError}
+                        setCardComplete={setCardComplete}
+                      />
+                    ) : (
+                      <PaymentContainer
+                        paymentInfoMap={paymentInfoMap}
+                        paymentProviderId={method.id}
+                        selectedPaymentOptionId={selectedPaymentMethod}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </RadioGroup>
           )}
 
           {paidByGiftcard && (

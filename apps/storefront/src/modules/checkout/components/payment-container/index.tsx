@@ -1,4 +1,6 @@
-import { Radio as RadioGroupOption } from "@headlessui/react"
+"use client"
+
+import { RadioGroupOption } from "@headlessui/react"
 import { Text, clx } from "@modules/common/components/ui"
 import React, { useContext, useMemo, type JSX } from "react"
 
@@ -64,6 +66,8 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
 }
 
 export default PaymentContainer
+
+// ====================== STRIPE CARD CONTAINER ======================
 
 export const StripeCardContainer = ({
   paymentProviderId,

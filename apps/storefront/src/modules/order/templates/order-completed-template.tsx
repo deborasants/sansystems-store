@@ -18,32 +18,41 @@ export default async function OrderCompletedTemplate({
   order,
 }: OrderCompletedTemplateProps) {
   const cookies = await nextCookies()
-
   const isOnboarding = cookies.get("_medusa_onboarding")?.value === "true"
 
   return (
-    <div className="py-6 min-h-[calc(100vh-64px)]">
-      <div className="content-container flex flex-col justify-center items-center gap-y-10 max-w-4xl h-full w-full">
+    <div className="py-10 min-h-[calc(100vh-64px)] bg-zinc-50">
+      <div className="content-container max-w-4xl mx-auto px-6">
         {isOnboarding && <OnboardingCta orderId={order.id} />}
+
         <div
-          className="flex flex-col gap-4 max-w-4xl h-full bg-white w-full py-10"
+          className="bg-white rounded-3xl shadow-sm p-8 md:p-12"
           data-testid="order-complete-container"
         >
-          <Heading
-            level="h1"
-            className="flex flex-col gap-y-3 text-ui-fg-base text-3xl mb-4"
-          >
-            <span>Thank you!</span>
-            <span>Your order was placed successfully.</span>
-          </Heading>
+          {/* Cabeçalho de Sucesso */}
+          <div className="text-center mb-12">
+            <div className="mx-auto w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-5xl mb-6">
+              ✓
+            </div>
+            <Heading level="h1" className="text-4xl font-semibold text-zinc-900">
+              Obrigado pelo seu pedido!
+            </Heading>
+            <p className="text-xl text-zinc-600 mt-3">
+              Seu pedido foi realizado com sucesso.
+            </p>
+          </div>
+
           <OrderDetails order={order} />
-          <Heading level="h2" className="flex flex-row text-3xl-regular">
-            Summary
+
+          <Heading level="h2" className="text-2xl font-semibold mt-12 mb-6">
+            Resumo do Pedido
           </Heading>
+
           <Items order={order} />
           <CartTotals totals={order} />
           <ShippingDetails order={order} />
           <PaymentDetails order={order} />
+
           <Help />
         </div>
       </div>

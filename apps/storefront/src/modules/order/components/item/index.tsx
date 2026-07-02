@@ -16,10 +16,20 @@ const Item = ({ item, currencyCode }: ItemProps) => {
     <Table.Row className="w-full" data-testid="product-row">
       <Table.Cell className="!pl-0 p-4 w-24">
         <div className="flex w-16">
-          <Thumbnail thumbnail={item.thumbnail} size="square" />
+          {item.thumbnail || item.variant?.thumbnail || item.product?.thumbnail ? (
+            <Thumbnail
+              thumbnail={
+                item.thumbnail || item.variant?.thumbnail || item.product?.thumbnail
+              }
+              size="square"
+            />
+          ) : (
+            <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center border border-gray-200">
+              <span className="text-3xl opacity-40">📦</span>
+            </div>
+          )}
         </div>
       </Table.Cell>
-
       <Table.Cell className="text-left">
         <Text
           className="txt-medium-plus text-ui-fg-base"

@@ -5,6 +5,7 @@ import Thumbnail from "@modules/products/components/thumbnail"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
+import { log } from "console"
 
 type OrderCardProps = {
   order: HttpTypes.StoreOrder
@@ -19,6 +20,8 @@ const OrderCard = ({ order }: OrderCardProps) => {
     )
   }, [order])
 
+  console.log(order);
+  
   const numberOfProducts = useMemo(() => {
     return order.items?.length ?? 0
   }, [order])
